@@ -97,12 +97,12 @@ module.exports = function (RED) {
           node.maxTempAdjustment,
           node.minSavings
         );
+        let currentTime = DateTime.now()
+        if (msg.payload.hasOwnProperty("time")) 
+          currentTime = msg.payload.time
 
-        if (msg.payload.hasOwnProperty("time")) {
-          node.dT = findTemp(msg.payload.time, node.schedule);
-        } else {
-          node.dT = findTemp(DateTime.now(), node.schedule);
-        }
+        node.dT = findTemp(currentTime, node.schedule);
+      
 
         node.T = node.setpoint + node.dT;
 
@@ -118,7 +118,7 @@ module.exports = function (RED) {
         };
 
         node.schedule.priceData = node.priceData;
-        node.schedule.time = DateTime.now().toISO();
+        node.schedule.time = currentTime;
         node.schedule.version = version;
 
         // Send output
